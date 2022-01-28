@@ -30,17 +30,14 @@ export class TodosRepository {
   }
 
   public async toggle(id: number): Promise<void> {
-    await this.ormRepository.query(
-      `
-      UPDATE
-        todos
-      SET
-        is_toggled = ((is_toggled | 1) - (is_toggled & 1))
-      WHERE
-        id = ?;
-      `,
-      [id],
-    );
+    const oldTodo = await this.ormRepository.findOne(id)
+    
+    const newTodo = {
+      ...oldTodo,
+      is_toggled: !oldTodo?.is_toggled
+    } as TodoModel
+
+    await this.ormRepository.save(newTodo)
   }
 
   public async delete(id: number): Promise<void> {
