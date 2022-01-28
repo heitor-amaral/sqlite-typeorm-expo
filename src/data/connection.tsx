@@ -9,8 +9,8 @@ import { ActivityIndicator } from 'react-native';
 import { Connection, createConnection } from 'typeorm';
 import * as SQLite from 'expo-sqlite'
 
-import { TodoModel } from './entities/TodoModel';
-import { CreateTodosTable1608217149351 } from './migrations/1608217149351-CreateTodosTable';
+import entities from './entities';
+import migrations from './migrations';
 import { TodosRepository } from './repositories/TodosRepository';
 
 interface DatabaseConnectionContextData {
@@ -29,12 +29,13 @@ export const DatabaseConnectionProvider: React.FC = ({ children }) => {
       type: 'expo',
       database: 'app_db',
       driver: SQLite,
-      entities: [TodoModel],
+      entities,
 
-      migrations: [CreateTodosTable1608217149351],
+      migrations,
       migrationsRun: true,
 
       synchronize: false,
+      logging: true
     });
 
     setConnection(createdConnection);
